@@ -99,7 +99,7 @@ class _signUpState extends State<signUp> {
                     print(passwordController.text);
                   }
                 },
-                text: "Log In",
+                text: "Sign Up",
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
