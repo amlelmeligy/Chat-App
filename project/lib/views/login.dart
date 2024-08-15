@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project/views/signUp.dart';
 import 'package:project/widget/widget.dart';
@@ -12,6 +13,9 @@ class login extends StatefulWidget {
 var emailController = TextEditingController();
 var passwordController = TextEditingController();
 var formKey = GlobalKey<FormState>(); //
+
+String? email;
+String? password;
 
 class _loginState extends State<login> {
   Widget build(BuildContext context) {
@@ -63,6 +67,9 @@ class _loginState extends State<login> {
                 height: 20,
               ),
               defaultTextField(
+                onchange: (data) {
+                  email = data;
+                },
                 controller: emailController,
                 labelText: "Email",
                 hintText: "Enter Your Email",
@@ -78,6 +85,9 @@ class _loginState extends State<login> {
                 height: 32,
               ),
               defaultTextField(
+                onchange: (data) {
+                  password = data;
+                },
                 controller: passwordController,
                 labelText: "Password",
                 hintText: "Enter Your Password",
@@ -93,11 +103,17 @@ class _loginState extends State<login> {
                 height: 32,
               ),
               defaultButton(
-                function: () {
-                  if (formKey.currentState!.validate()) {
-                    print(emailController.text);
-                    print(passwordController.text);
-                  }
+                onpressed: () async {
+                  // if (formKey.currentState!.validate()) {
+                  //   print(emailController.text);
+                  //   print(passwordController.text);
+                  // }
+                  var auth = FirebaseAuth.instance;
+                  UserCredential user =
+                      await auth.createUserWithEmailAndPassword(
+                    email: email!,
+                    password: password!,
+                  );
                 },
                 text: "Log In",
               ),

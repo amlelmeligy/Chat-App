@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project/views/login.dart';
 import 'package:project/widget/widget.dart';
@@ -93,13 +94,17 @@ class _signUpState extends State<signUp> {
                 height: 32,
               ),
               defaultButton(
-                function: () {
-                  if (formKey.currentState!.validate()) {
-                    print(emailController.text);
-                    print(passwordController.text);
-                  }
-                },
                 text: "Sign Up",
+                onpressed: () {
+                  // if (formKey.currentState!.validate()) {
+                  //   print(emailController.text);
+                  //   print(passwordController.text);
+                  // }
+                  var auth = FirebaseAuth.instance;
+                  auth.createUserWithEmailAndPassword(
+                      email: emailController.text,
+                      password: passwordController.text);
+                },
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -8,8 +8,10 @@ Widget defaultTextField({
   required String hintText,
   required TextInputType type,
   required validate,
+  String? Function(String?)? onchange,
 }) =>
     TextFormField(
+      onChanged: onchange,
       cursorColor: Colors.white,
       validator: validate,
       keyboardType: type,
@@ -40,7 +42,7 @@ Widget defaultButton({
   double width = double.infinity,
   Color background = Colors.white,
   double raduis = 10,
-  required VoidCallback function,
+  required onpressed,
   required String text,
 }) =>
     Container(
@@ -50,7 +52,7 @@ Widget defaultButton({
       ),
       width: width,
       child: MaterialButton(
-        onPressed: function,
+        onPressed: onpressed,
         child: Text(
           text,
           style: TextStyle(
