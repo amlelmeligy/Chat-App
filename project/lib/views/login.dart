@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:project/views/home.dart';
 import 'package:project/views/signUp.dart';
+import 'package:project/widget/show-snackBar.dart';
 import 'package:project/widget/widget.dart';
 
 class login extends StatefulWidget {
@@ -14,189 +17,137 @@ var emailController = TextEditingController();
 var passwordController = TextEditingController();
 var formKey = GlobalKey<FormState>(); //
 
-String? email;
-String? password;
+String? loginEmail;
+String? loginPassword;
+bool isloading = false;
 
 class _loginState extends State<login> {
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 32, 65, 91),
-        title: Text(
-          'Log In',
-          style: TextStyle(
-            color: Colors.white,
+    return ModalProgressHUD(
+      inAsyncCall: isloading,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color.fromARGB(255, 32, 65, 91),
+          title: Text(
+            'Log In',
+            style: TextStyle(
+              color: Colors.white,
+            ),
           ),
         ),
-      ),
-      body: Container(
-        padding: EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          color: Color.fromARGB(255, 32, 65, 91),
-        ),
-        child: Form(
-          key: formKey,
-          child: ListView(
-            children: [
-              Image.asset(
-                "assets/images/scholar.png",
-                alignment: Alignment.topCenter,
-                width: 150,
-                height: 120,
-              ),
-              Container(
-                width: double.infinity,
-                child: Text(
-                  "Scholar Chat",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 30,
-                      color: Colors.white,
-                      fontFamily: "Pacifico"),
+        body: Container(
+          padding: EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            color: Color.fromARGB(255, 32, 65, 91),
+          ),
+          child: Form(
+            key: formKey,
+            child: ListView(
+              children: [
+                Image.asset(
+                  "assets/images/scholar.png",
+                  alignment: Alignment.topCenter,
+                  width: 150,
+                  height: 120,
                 ),
-              ),
-              SizedBox(height: 60),
-              Text(
-                "Sign In",
-                style: TextStyle(
-                  fontSize: 22,
-                  color: Colors.white,
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              defaultTextField(
-                onchange: (data) {
-                  email = data;
-                },
-                controller: emailController,
-                labelText: "Email",
-                hintText: "Enter Your Email",
-                type: TextInputType.emailAddress,
-                validate: (value) {
-                  if (value.isEmpty) {
-                    return "Please Enter Your Email";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 32,
-              ),
-              defaultTextField(
-                onchange: (data) {
-                  password = data;
-                },
-                controller: passwordController,
-                labelText: "Password",
-                hintText: "Enter Your Password",
-                type: TextInputType.name,
-                validate: (value) {
-                  if (value!.isEmpty) {
-                    return "Please Enter Your Password";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 32,
-              ),
-              defaultButton(
-                onpressed: () async {
-                  // if (formKey.currentState!.validate()) {
-                  //   print(emailController.text);
-                  //   print(passwordController.text);
-                  // }
-
-                  try {
-                    UserCredential user = await FirebaseAuth.instance
-                        .createUserWithEmailAndPassword(
-                      email: email!,
-                      password: password!,
-                    );
-                  } on FirebaseAuthException catch (e) {
-                    if (e.code == 'weak-password') {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: Color.fromARGB(255, 32, 65, 91),
-                          content: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              border: Border.all(
-                                  color:
-                                      const Color.fromARGB(255, 255, 255, 255)),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: EdgeInsets.all(20),
-                            child: Text("The password provided is too weak."),
-                          ),
-                        ),
-                      );
-                    } else if (e.code == 'email-already-in-use') {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: Color.fromARGB(255, 32, 65, 91),
-                          content: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              border: Border.all(
-                                  color:
-                                      const Color.fromARGB(255, 255, 255, 255)),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: EdgeInsets.all(20),
-                            child: Text(
-                                "The account already exists for that email."),
-                          ),
-                        ),
-                      );
-                    }
-                  }
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: Color.fromARGB(255, 32, 65, 91),
-                      content: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          border: Border.all(
-                              color: const Color.fromARGB(255, 255, 255, 255)),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: EdgeInsets.all(20),
-                        child: Text(
-                          "success",
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-                text: "Log In",
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Don't have an account ?",
+                Container(
+                  width: double.infinity,
+                  child: Text(
+                    "Scholar Chat",
+                    textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.white,
-                    ),
+                        fontSize: 30,
+                        color: Colors.white,
+                        fontFamily: "Pacifico"),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, "signUp");
-                    },
-                    child: Text(
-                      "Sign Up",
+                ),
+                SizedBox(height: 60),
+                Text(
+                  "Sign In",
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                defaultTextField(
+                  onchange: (value) {
+                    loginEmail = value;
+                  },
+                  controller: emailController,
+                  labelText: "Email",
+                  hintText: "Enter Your Email",
+                  type: TextInputType.emailAddress,
+                ),
+                SizedBox(
+                  height: 32,
+                ),
+                defaultTextField(
+                  onchange: (value) {
+                    loginPassword = value;
+                  },
+                  controller: passwordController,
+                  labelText: "Password",
+                  hintText: "Enter Your Password",
+                  type: TextInputType.name,
+                ),
+                SizedBox(
+                  height: 32,
+                ),
+                defaultButton(
+                  onpressed: () async {
+                    if (formKey.currentState!.validate()) {
+                      isloading = true;
+                      setState(() {});
+                      try {
+                        UserCredential user = await FirebaseAuth.instance
+                            .createUserWithEmailAndPassword(
+                          email: loginEmail!,
+                          password: loginPassword!,
+                        );
+                        Navigator.pushNamed(context, 'home');
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'user-not-found') {
+                          ShowBar(context, "No user found for that email.");
+                        } else if (e.code == 'wrong-password') {
+                          ShowBar(context,
+                              "Wrong password provided for that user.");
+                        }
+                      } catch (e) {
+                        ShowBar(context, "An error occurred");
+                      }
+                      isloading = false;
+                      setState(() {});
+                    }
+                  },
+                  text: "Log In",
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Don't have an account ?",
                       style: TextStyle(
-                        color: Color.fromARGB(255, 200, 221, 236),
+                        color: Colors.white,
                       ),
                     ),
-                  ),
-                ],
-              )
-            ],
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, "signUp");
+                      },
+                      child: Text(
+                        "Sign Up",
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 200, 221, 236),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

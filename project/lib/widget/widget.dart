@@ -7,13 +7,18 @@ Widget defaultTextField({
   required String labelText,
   required String hintText,
   required TextInputType type,
-  required validate,
   String? Function(String?)? onchange,
 }) =>
     TextFormField(
       onChanged: onchange,
       cursorColor: Colors.white,
-      validator: validate,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please enter some text';
+        } else {
+          return null;
+        }
+      },
       keyboardType: type,
       controller: controller,
       decoration: InputDecoration(
