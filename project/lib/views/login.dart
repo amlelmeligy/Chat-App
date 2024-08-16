@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:project/views/home.dart';
+import 'package:project/views/chat.dart';
 import 'package:project/views/signUp.dart';
 import 'package:project/widget/show-snackBar.dart';
 import 'package:project/widget/widget.dart';
@@ -13,8 +13,6 @@ class login extends StatefulWidget {
   State<login> createState() => _loginState();
 }
 
-var emailController = TextEditingController();
-var passwordController = TextEditingController();
 var formKey = GlobalKey<FormState>(); //
 
 String? loginEmail;
@@ -76,7 +74,6 @@ class _loginState extends State<login> {
                   onchange: (value) {
                     loginEmail = value;
                   },
-                  controller: emailController,
                   labelText: "Email",
                   hintText: "Enter Your Email",
                   type: TextInputType.emailAddress,
@@ -88,7 +85,6 @@ class _loginState extends State<login> {
                   onchange: (value) {
                     loginPassword = value;
                   },
-                  controller: passwordController,
                   labelText: "Password",
                   hintText: "Enter Your Password",
                   type: TextInputType.name,
@@ -107,7 +103,7 @@ class _loginState extends State<login> {
                           email: loginEmail!,
                           password: loginPassword!,
                         );
-                        Navigator.pushNamed(context, 'home');
+                        Navigator.pushNamed(context, 'chat');
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'user-not-found') {
                           ShowBar(context, "No user found for that email.");

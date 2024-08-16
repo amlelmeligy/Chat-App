@@ -12,8 +12,6 @@ class signUp extends StatefulWidget {
   State<signUp> createState() => _signUpState();
 }
 
-var emailController = TextEditingController();
-var passwordController = TextEditingController();
 var formKey = GlobalKey<FormState>(); //
 
 String? email;
@@ -75,7 +73,6 @@ class _signUpState extends State<signUp> {
                   onchange: (data) {
                     email = data;
                   },
-                  controller: emailController,
                   labelText: "Email",
                   hintText: "Enter Your Email",
                   type: TextInputType.emailAddress,
@@ -87,7 +84,6 @@ class _signUpState extends State<signUp> {
                   onchange: (data) {
                     password = data;
                   },
-                  controller: passwordController,
                   labelText: "Password",
                   hintText: "Enter Your Password",
                   type: TextInputType.name,
@@ -107,7 +103,7 @@ class _signUpState extends State<signUp> {
                           email: email!,
                           password: password!,
                         );
-                        Navigator.pushNamed(context, 'home');
+                        Navigator.pushNamed(context, 'chat');
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'badly formatted') {
                           ShowBar(

@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 Widget defaultTextField({
-  required TextEditingController controller,
   required String labelText,
   required String hintText,
   required TextInputType type,
@@ -20,7 +19,6 @@ Widget defaultTextField({
         }
       },
       keyboardType: type,
-      controller: controller,
       decoration: InputDecoration(
         hoverColor: Colors.white,
         focusColor: Colors.white,
