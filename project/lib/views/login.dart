@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:project/views/chat.dart';
 import 'package:project/views/signUp.dart';
@@ -13,11 +14,12 @@ class login extends StatefulWidget {
   State<login> createState() => _loginState();
 }
 
-var formKey = GlobalKey<FormState>(); //
+GlobalKey<FormState> formKey = GlobalKey(); //
 
-String? loginEmail;
-String? loginPassword;
+String? email;
+String? password;
 bool isloading = false;
+bool isPassword = true;
 
 class _loginState extends State<login> {
   Widget build(BuildContext context) {
@@ -25,6 +27,16 @@ class _loginState extends State<login> {
       inAsyncCall: isloading,
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              size: 25,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
           backgroundColor: Color.fromARGB(255, 32, 65, 91),
           title: Text(
             'Log In',
@@ -42,8 +54,8 @@ class _loginState extends State<login> {
             key: formKey,
             child: ListView(
               children: [
-                Image.asset(
-                  "assets/images/scholar.png",
+                Lottie.asset(
+                  "assets/lotties/44444.json",
                   alignment: Alignment.topCenter,
                   width: 150,
                   height: 120,
@@ -56,12 +68,12 @@ class _loginState extends State<login> {
                     style: TextStyle(
                         fontSize: 30,
                         color: Colors.white,
-                        fontFamily: "Pacifico"),
+                        fontFamily: "Poppins"),
                   ),
                 ),
                 SizedBox(height: 60),
                 Text(
-                  "Sign In",
+                  "Log In",
                   style: TextStyle(
                     fontSize: 22,
                     color: Colors.white,
@@ -71,8 +83,8 @@ class _loginState extends State<login> {
                   height: 20,
                 ),
                 defaultTextField(
-                  onchange: (value) {
-                    loginEmail = value;
+                  onchange: (data) {
+                    email = data;
                   },
                   labelText: "Email",
                   hintText: "Enter Your Email",
@@ -82,8 +94,11 @@ class _loginState extends State<login> {
                   height: 32,
                 ),
                 defaultTextField(
-                  onchange: (value) {
-                    loginPassword = value;
+                  suffix: //العين
+                      isPassword ? Icons.visibility_off : Icons.visibility,
+                  isPassword: isPassword,
+                  onchange: (data) {
+                    password = data;
                   },
                   labelText: "Password",
                   hintText: "Enter Your Password",
@@ -93,17 +108,15 @@ class _loginState extends State<login> {
                   height: 32,
                 ),
                 defaultButton(
+                  text: "Log In",
                   onpressed: () async {
                     if (formKey.currentState!.validate()) {
                       isloading = true;
                       setState(() {});
+
                       try {
-                        UserCredential user = await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                          email: loginEmail!,
-                          password: loginPassword!,
-                        );
-                        Navigator.pushNamed(context, 'chat');
+                        await loginuser();
+                        Navigator.pushNamed(context, 'chat', arguments: email);
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'user-not-found') {
                           ShowBar(context, "No user found for that email.");
@@ -118,7 +131,6 @@ class _loginState extends State<login> {
                       setState(() {});
                     }
                   },
-                  text: "Log In",
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -147,6 +159,14 @@ class _loginState extends State<login> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> loginuser() async {
+    UserCredential user =
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email!,
+      password: password!,
     );
   }
 }

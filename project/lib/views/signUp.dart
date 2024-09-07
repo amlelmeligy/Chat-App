@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:project/views/login.dart';
 import 'package:project/widget/show-snackBar.dart';
@@ -17,6 +18,7 @@ var formKey = GlobalKey<FormState>(); //
 String? email;
 String? password;
 bool isloading = false;
+bool isPassword = true;
 
 class _signUpState extends State<signUp> {
   Widget build(BuildContext context) {
@@ -24,6 +26,16 @@ class _signUpState extends State<signUp> {
       inAsyncCall: isloading,
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              size: 25,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
           backgroundColor: Color.fromARGB(255, 32, 65, 91),
           title: Text(
             'Sign Up',
@@ -41,8 +53,8 @@ class _signUpState extends State<signUp> {
             key: formKey,
             child: ListView(
               children: [
-                Image.asset(
-                  "assets/images/scholar.png",
+                Lottie.asset(
+                  "assets/lotties/44444.json",
                   alignment: Alignment.topCenter,
                   width: 150,
                   height: 120,
@@ -55,7 +67,7 @@ class _signUpState extends State<signUp> {
                     style: TextStyle(
                         fontSize: 30,
                         color: Colors.white,
-                        fontFamily: "Pacifico"),
+                        fontFamily: "Poppins"),
                   ),
                 ),
                 SizedBox(height: 60),
@@ -78,13 +90,30 @@ class _signUpState extends State<signUp> {
                   type: TextInputType.emailAddress,
                 ),
                 SizedBox(
-                  height: 32,
+                  height: 15,
                 ),
                 defaultTextField(
+                  isPassword: isPassword,
+                  suffix: //العين
+                      isPassword ? Icons.visibility_off : Icons.visibility,
                   onchange: (data) {
                     password = data;
                   },
                   labelText: "Password",
+                  hintText: "Enter Your Password",
+                  type: TextInputType.name,
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                defaultTextField(
+                  isPassword: isPassword,
+                  suffix: //العين
+                      isPassword ? Icons.visibility_off : Icons.visibility,
+                  onchange: (data) {
+                    password = data;
+                  },
+                  labelText: "Confirm Password",
                   hintText: "Enter Your Password",
                   type: TextInputType.name,
                 ),
@@ -98,11 +127,7 @@ class _signUpState extends State<signUp> {
                       isloading = true;
                       setState(() {});
                       try {
-                        UserCredential user = await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                          email: email!,
-                          password: password!,
-                        );
+                        await signupuser();
                         Navigator.pushNamed(context, 'chat');
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'badly formatted') {
@@ -147,6 +172,14 @@ class _signUpState extends State<signUp> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> signupuser() async {
+    UserCredential user =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: email!,
+      password: password!,
     );
   }
 }

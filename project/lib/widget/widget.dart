@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -7,8 +9,13 @@ Widget defaultTextField({
   required String hintText,
   required TextInputType type,
   String? Function(String?)? onchange,
+  bool obscureText = false,
+  bool isPassword = false,
+  suffixpressed, //العين
+  IconData? suffix,
 }) =>
     TextFormField(
+      obscureText: isPassword,
       onChanged: onchange,
       cursorColor: Colors.white,
       validator: (value) {
@@ -20,8 +27,28 @@ Widget defaultTextField({
       },
       keyboardType: type,
       decoration: InputDecoration(
-        hoverColor: Colors.white,
-        focusColor: Colors.white,
+        suffixIcon: IconButton(
+          //العين
+          icon: Icon(
+            suffix,
+            color: Colors.white,
+          ),
+          onPressed: suffixpressed, //العين
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(
+            width: 1.5,
+            color: Colors.white,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(
+            width: 1.5,
+            color: Colors.white,
+          ),
+        ),
         labelText: labelText,
         labelStyle: TextStyle(
           color: Colors.white,
@@ -33,13 +60,11 @@ Widget defaultTextField({
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(width: 1, color: Colors.white),
-        ),
+      ),
+      style: TextStyle(
+        color: Colors.white, // Set the text color to white
       ),
     );
-
 ///////////////////////////////
 Widget defaultButton({
   double width = double.infinity,
